@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include "Stack.h"
+
+void initStack(Stack *stack){
+	*stack = NULL;
+}
+bool isEmpty(Stack stack){
+	return !stack;
+}
+void push(Stack *stack, int data){
+	StackType *newStack = malloc(sizeof(StackType));
+	
+	if(newStack != NULL){
+		newStack->data = data;
+		newStack->next = NULL;
+		
+		newStack->next = *stack;
+		*stack = newStack;
+	}else {
+		printf("Something Went wrong");
+	}
+}
+void pop(Stack *stack){
+	if(!isEmpty(*stack)){
+		StackType *temp = *stack;
+		*stack = (*stack)->next;
+		free(temp);	
+	}else {
+		printf("STACK IS EMPTY");
+	}
+
+}
+Data peek(Stack stack){
+	return stack->data;
+}
+void display(Stack *stack){
+	StackType *tempStack, *holder;
+	
+	initStack(&tempStack);
+	
+	while(!isEmpty(*stack)){
+		push(&tempStack, (*stack)->data);
+		holder = *stack;
+		*stack = (*stack)->next;
+		holder->next = NULL;
+		pop(&holder);
+	}
+	
+	
+	while(!isEmpty(tempStack)){
+		printf("Data: %d\n", peek(tempStack));
+		push(&(*stack), tempStack->data);
+		holder = tempStack;
+		tempStack = tempStack->next;
+		holder->next = NULL;
+		pop(&holder);
+	}
+}
+void visualize(Stack stack){
+	while(stack != NULL){
+		printf("%d\n", stack->data);
+		stack = stack->next;
+	}
+}
